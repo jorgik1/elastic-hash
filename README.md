@@ -1,6 +1,6 @@
 # Elastic Hash
 
-[![Python Tests](https://github.com/yourusername/elastic-hash/actions/workflows/python-tests.yml/badge.svg)](https://github.com/yourusername/elastic-hash/actions/workflows/python-tests.yml)
+[![Python Tests](https://github.com/jorgik1/elastic-hash/actions/workflows/python-tests.yml/badge.svg)](https://github.com/jorgik1/elastic-hash/actions/workflows/python-tests.yml)
 [![PyPI version](https://badge.fury.io/py/elastic-hash.svg)](https://badge.fury.io/py/elastic-hash)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Versions](https://img.shields.io/pypi/pyversions/elastic-hash.svg)](https://pypi.org/project/elastic-hash/)
