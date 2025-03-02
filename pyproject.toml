@@ -11,7 +11,6 @@ authors = [{name = "Yurii Stenin", email = "your.email@example.com"}]
 license = {text = "MIT"}
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -26,7 +25,7 @@ classifiers = [
 ]
 keywords = ["hash table", "data structure", "algorithm", "elastic hash", "funnel hash", "open addressing"]
 dependencies = []
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-cov", "black", "isort", "flake8"]
