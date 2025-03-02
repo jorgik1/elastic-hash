@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "open-elastic-hash"
-version = "0.1.0"
+version = "0.1.1"
 description = "Implementation of Elastic and Funnel Hashing algorithms based on academic research"
 readme = "README.md"
 authors = [{name = "Yurii Stenin", email = "your.email@example.com"}]
