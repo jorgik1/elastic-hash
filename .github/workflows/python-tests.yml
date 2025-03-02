@@ -29,19 +29,9 @@ jobs:
       id: check-formatting
       continue-on-error: true
       run: |
-        black --check elastic_hash tests examples
-        isort --check elastic_hash tests examples
-    
-    - name: Format code if checks failed
-      if: steps.check-formatting.outcome == 'failure' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-      run: |
-        black elastic_hash tests examples
-        isort elastic_hash tests examples
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add .
-        git commit -m "Apply automatic code formatting" || echo "No changes to commit"
-        git push
+        black --check --diff elastic_hash tests examples || echo "Formatting issues found. Run './run_format.sh' locally."
+        isort --check --diff elastic_hash tests examples || echo "Import sorting issues found. Run './run_format.sh' locally."
+        echo "Please run './run_format.sh' locally and commit the changes if formatting issues are found."
 
   test:
     needs: lint-and-format
