@@ -1,11 +1,13 @@
-# Elastic Hash
+# Open Elastic Hash
 
 [![Python Tests](https://github.com/jorgik1/elastic-hash/actions/workflows/python-tests.yml/badge.svg)](https://github.com/jorgik1/elastic-hash/actions/workflows/python-tests.yml)
-[![PyPI version](https://badge.fury.io/py/elastic-hash.svg)](https://pypi.org/project/open-elastic-hash/)
+[![PyPI version](https://badge.fury.io/py/open-elastic-hash.svg)](https://pypi.org/project/open-elastic-hash/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python Versions](https://img.shields.io/pypi/pyversions/elastic-hash.svg)](https://pypi.org/project/elastic-hash/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/open-elastic-hash.svg)](https://pypi.org/project/open-elastic-hash/)
 
 A Python implementation of advanced open addressing hash table algorithms from the paper "Optimal Bounds for Open Addressing Without Reordering" by Martín Farach-Colton, Andrew Krapivin, and William Kuszmaul.
+
+**Note:** This package is published on PyPI as `open-elastic-hash` but the internal module name remains `elastic_hash`.
 
 ## Features
 
@@ -20,13 +22,13 @@ Where δ is the fraction of empty slots in the table (e.g., if the table is 90% 
 ## Installation
 
 ```bash
-pip install elastic-hash
+pip install open-elastic-hash
 ```
 
 Or install from source:
 
 ```bash
-git clone https://github.com/yourusername/elastic-hash.git
+git clone https://github.com/jorgik1/elastic-hash.git
 cd elastic-hash
 pip install -e .
 ```
@@ -36,7 +38,7 @@ pip install -e .
 ### ElasticHashTable
 
 ```python
-from elastic_hash import ElasticHashTable
+from elastic_hash import ElasticHashTable  # Note: Package is 'open-elastic-hash' but module is 'elastic_hash'
 
 # Create a new table with capacity 100
 table = ElasticHashTable(100)
@@ -67,7 +69,7 @@ for key, value in table:
 ### FunnelHashTable
 
 ```python
-from elastic_hash import FunnelHashTable
+from elastic_hash import FunnelHashTable  # Note: Package is 'open-elastic-hash' but module is 'elastic_hash'
 
 # Create a new table with capacity 100
 table = FunnelHashTable(100)
