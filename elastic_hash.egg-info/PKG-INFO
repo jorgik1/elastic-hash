@@ -1,0 +1,147 @@
+Metadata-Version: 2.2
+Name: elastic-hash
+Version: 0.1.0
+Summary: Implementation of Elastic and Funnel Hashing algorithms
+Author-email: Yurii Stenin <yurii.ipcom@gmail.com>
+License: MIT
+Project-URL: Homepage, https://github.com/yourusername/elastic-hash
+Project-URL: Bug Tracker, https://github.com/yourusername/elastic-hash/issues
+Keywords: hash table,data structure,algorithm
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: requires-python
+
+# Elastic Hash
+
+A Python implementation of advanced open addressing hash table algorithms from the paper "Optimal Bounds for Open Addressing Without Reordering" by Martín Farach-Colton, Andrew Krapivin, and William Kuszmaul.
+
+## Features
+
+This library provides two cutting-edge hash table implementations:
+
+1. **ElasticHashTable**: Achieves O(1) amortized expected probe complexity and O(log 1/δ) worst-case expected probe complexity without reordering elements.
+
+2. **FunnelHashTable**: A greedy approach that achieves O(log² 1/δ) worst-case expected probe complexity, disproving the longstanding Yao's conjecture that O(1/δ) was optimal for greedy approaches.
+
+Where δ is the fraction of empty slots in the table (e.g., if the table is 90% full, δ = 0.1).
+
+## Installation
+
+```bash
+pip install elastic-hash
+```
+
+Or install from source:
+
+```bash
+git clone https://github.com/yourusername/elastic-hash.git
+cd elastic-hash
+pip install -e .
+```
+
+## Usage
+
+### ElasticHashTable
+
+```python
+from elastic_hash import ElasticHashTable
+
+# Create a new table with capacity 100
+table = ElasticHashTable(100)
+
+# Insert some values
+table.insert("name", "John Doe")
+table.insert("email", "john@example.com")
+table.insert("age", 30)
+
+# Retrieve values
+print(table.get("name"))  # "John Doe"
+print(table.get("unknown"))  # None
+
+# Check if key exists
+print("name" in table)  # True
+
+# Remove a key
+table.remove("email")  # True
+
+# Get size
+print(len(table))  # 2
+
+# Iterate over all key-value pairs
+for key, value in table:
+    print(f"{key}: {value}")
+```
+
+### FunnelHashTable
+
+```python
+from elastic_hash import FunnelHashTable
+
+# Create a new table with capacity 100
+table = FunnelHashTable(100)
+
+# The API is the same as ElasticHashTable
+table.insert("key", "value")
+value = table.get("key")
+exists = "key" in table
+success = table.remove("key")
+```
+
+## Advantages Over Built-in Dict
+
+1. **Bounded Operations**: Our hash tables provide strong theoretical guarantees on worst-case operation time, which can be critical for real-time applications.
+
+2. **Consistent Performance**: When operating at high load factors (e.g., 90% full), our hash tables maintain better worst-case performance than traditional approaches.
+
+3. **Memory Efficiency**: Our implementations work well even when very full, allowing you to use memory more efficiently.
+
+4. **No Reordering**: Unlike some advanced hash tables, our implementations never move elements after insertion, which can be important for certain applications.
+
+## Benchmarks
+
+The `examples/benchmark.py` script compares the performance of ElasticHashTable, FunnelHashTable, and Python's built-in dict across different capacities and load factors.
+
+```bash
+python examples/benchmark.py
+```
+
+## Technical Details
+
+### ElasticHashTable
+
+- Divides the array into subarrays of geometrically decreasing sizes
+- Uses a two-dimensional probe sequence for each key
+- Implements batch-based insertion to maintain balanced fill levels
+- Achieves O(1) amortized expected probe complexity through careful distribution of work
+
+### FunnelHashTable
+
+- Divides the array into multiple levels with buckets of fixed size
+- Uses a greedy approach where elements cascade down through levels
+- Implements a special overflow area using the power-of-two-choices method
+- Achieves O(log² 1/δ) worst-case expected probe complexity
+
+## When to Use
+
+- When you need strong worst-case guarantees for real-time systems
+- When you're working with high load factors (>80% full)
+- When memory efficiency is important
+- When you need to optimize for lookup performance
+
+## Running Tests
+
+```bash
+python -m unittest discover tests
+```
+
+## Credits
+
+Based on the paper "Optimal Bounds for Open Addressing Without Reordering" by Martín Farach-Colton, Andrew Krapivin, and William Kuszmaul.
+
+## License
+
+MIT

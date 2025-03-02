@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "elastic-hash"
+version = "0.1.0"
+description = "Implementation of Elastic and Funnel Hashing algorithms based on academic research"
+readme = "README.md"
+authors = [{name = "Yurii Stenin", email = "your.email@example.com"}]
+license = {text = "MIT"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Development Status :: 4 - Beta",
+]
+keywords = ["hash table", "data structure", "algorithm", "elastic hash", "funnel hash", "open addressing"]
+dependencies = []
+requires-python = ">=3.7"
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov", "black", "isort", "flake8"]
+plot = ["matplotlib"]
+full = ["matplotlib"]
+
+[project.urls]
+"Homepage" = "https://github.com/yourusername/elastic-hash"
+"Bug Tracker" = "https://github.com/yourusername/elastic-hash/issues"
+"Documentation" = "https://github.com/yourusername/elastic-hash#readme"
+"Changelog" = "https://github.com/yourusername/elastic-hash/blob/main/CHANGELOG.md"
+"Source Code" = "https://github.com/yourusername/elastic-hash"
