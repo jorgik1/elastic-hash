@@ -1,7 +1,16 @@
+CHANGELOG.md
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
 LICENSE
+MANIFEST.in
 README.md
 pyproject.toml
+setup.cfg
 setup.py
+.github/pull_request_template.md
+.github/ISSUE_TEMPLATE/bug_report.md
+.github/ISSUE_TEMPLATE/feature_request.md
+.github/workflows/python-tests.yml
 elastic_hash/__init__.py
 elastic_hash/elastic_table.py
 elastic_hash/funnel_table.py
@@ -9,5 +18,8 @@ elastic_hash/hash_functions.py
 elastic_hash.egg-info/PKG-INFO
 elastic_hash.egg-info/SOURCES.txt
 elastic_hash.egg-info/dependency_links.txt
+elastic_hash.egg-info/requires.txt
 elastic_hash.egg-info/top_level.txt
+examples/benchmark.py
+examples/simple_usage.py
 tests/test_hash_tables.py

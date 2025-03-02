@@ -3,7 +3,7 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "elastic-hash"
+name = "open-elastic-hash"
 version = "0.1.0"
 description = "Implementation of Elastic and Funnel Hashing algorithms based on academic research"
 readme = "README.md"
@@ -34,8 +34,8 @@ plot = ["matplotlib"]
 full = ["matplotlib"]
 
 [project.urls]
-"Homepage" = "https://github.com/yourusername/elastic-hash"
-"Bug Tracker" = "https://github.com/yourusername/elastic-hash/issues"
-"Documentation" = "https://github.com/yourusername/elastic-hash#readme"
-"Changelog" = "https://github.com/yourusername/elastic-hash/blob/main/CHANGELOG.md"
-"Source Code" = "https://github.com/yourusername/elastic-hash"
+"Homepage" = "https://github.com/jorgik1/elastic-hash"
+"Bug Tracker" = "https://github.com/jorgik1/elastic-hash/issues"
+"Documentation" = "https://github.com/jorgik1/elastic-hash#readme"
+"Changelog" = "https://github.com/jorgik1/elastic-hash/blob/main/CHANGELOG.md"
+"Source Code" = "https://github.com/jorgik1/elastic-hash"
