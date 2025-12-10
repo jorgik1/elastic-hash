@@ -8,6 +8,7 @@ import math
 from typing import Generic, Iterator, List, Optional, Tuple, TypeVar
 
 from .hash_functions import murmur_hash
+from .utils import TOMBSTONE
 
 K = TypeVar("K")  # Key type
 V = TypeVar("V")  # Value type
@@ -144,7 +145,7 @@ class FunnelHashTable(Generic[K, V]):
             # Check all slots in the bucket
             for j in range(self.beta):
                 idx = bucket_start + j
-                if idx < len(self.subarrays[i]) and self.subarrays[i][idx] is None:
+                if idx < len(self.subarrays[i]) and (self.subarrays[i][idx] is None or self.subarrays[i][idx] is TOMBSTONE):
                     self.subarrays[i][idx] = (key, value)
                     self.size += 1
                     return
@@ -153,7 +154,7 @@ class FunnelHashTable(Generic[K, V]):
         log_log_n = int(math.log2(math.log2(self.capacity) + 1))
         for j in range(min(len(self.overflow_b), log_log_n)):
             idx = murmur_hash(key, seed=1000000 + j) % len(self.overflow_b)
-            if self.overflow_b[idx] is None:
+            if self.overflow_b[idx] is None or self.overflow_b[idx] is TOMBSTONE:
                 self.overflow_b[idx] = (key, value)
                 self.size += 1
                 return
@@ -185,9 +186,9 @@ class FunnelHashTable(Generic[K, V]):
             idx1 = (bucket1_start + i) % len(self.overflow_c)
             idx2 = (bucket2_start + i) % len(self.overflow_c)
 
-            if self.overflow_c[idx1] is None:
+            if self.overflow_c[idx1] is None or self.overflow_c[idx1] is TOMBSTONE:
                 empty_count1 += 1
-            if self.overflow_c[idx2] is None:
+            if self.overflow_c[idx2] is None or self.overflow_c[idx2] is TOMBSTONE:
                 empty_count2 += 1
 
         # Choose the bucket with more empty slots
@@ -196,7 +197,7 @@ class FunnelHashTable(Generic[K, V]):
         # Try to find an empty slot in the chosen bucket
         for i in range(bucket_size):
             idx = (chosen_start + i) % len(self.overflow_c)
-            if self.overflow_c[idx] is None:
+            if self.overflow_c[idx] is None or self.overflow_c[idx] is TOMBSTONE:
                 self.overflow_c[idx] = (key, value)
                 self.size += 1
                 return
@@ -205,14 +206,14 @@ class FunnelHashTable(Generic[K, V]):
         other_start = bucket2_start if chosen_start == bucket1_start else bucket1_start
         for i in range(bucket_size):
             idx = (other_start + i) % len(self.overflow_c)
-            if self.overflow_c[idx] is None:
+            if self.overflow_c[idx] is None or self.overflow_c[idx] is TOMBSTONE:
                 self.overflow_c[idx] = (key, value)
                 self.size += 1
                 return
 
         # Last resort: scan the entire overflow_c area
         for i in range(len(self.overflow_c)):
-            if self.overflow_c[i] is None:
+            if self.overflow_c[i] is None or self.overflow_c[i] is TOMBSTONE:
                 self.overflow_c[i] = (key, value)
                 self.size += 1
                 return
@@ -245,7 +246,7 @@ class FunnelHashTable(Generic[K, V]):
                     # Empty slot in this bucket, key not in this subarray
                     break
 
-                if slot[0] == key:
+                if slot is not TOMBSTONE and slot[0] == key:
                     return slot[1]
 
         # Check overflow area B
@@ -253,7 +254,7 @@ class FunnelHashTable(Generic[K, V]):
         for j in range(min(len(self.overflow_b), log_log_n)):
             idx = murmur_hash(key, seed=1000000 + j) % len(self.overflow_b)
             slot = self.overflow_b[idx]
-            if slot is not None and slot[0] == key:
+            if slot is not None and slot is not TOMBSTONE and slot[0] == key:
                 return slot[1]
 
         # Check overflow area C
@@ -266,7 +267,7 @@ class FunnelHashTable(Generic[K, V]):
             for i in range(bucket_size):
                 idx = (start_idx + i) % len(self.overflow_c)
                 slot = self.overflow_c[idx]
-                if slot is not None and slot[0] == key:
+                if slot is not None and slot is not TOMBSTONE and slot[0] == key:
                     return slot[1]
 
         return None
@@ -294,8 +295,8 @@ class FunnelHashTable(Generic[K, V]):
                 if slot is None:
                     break
 
-                if slot[0] == key:
-                    self.subarrays[i][idx] = None
+                if slot is not TOMBSTONE and slot[0] == key:
+                    self.subarrays[i][idx] = TOMBSTONE
                     self.size -= 1
                     return True
 
@@ -304,8 +305,8 @@ class FunnelHashTable(Generic[K, V]):
         for j in range(min(len(self.overflow_b), log_log_n)):
             idx = murmur_hash(key, seed=1000000 + j) % len(self.overflow_b)
             slot = self.overflow_b[idx]
-            if slot is not None and slot[0] == key:
-                self.overflow_b[idx] = None
+            if slot is not None and slot is not TOMBSTONE and slot[0] == key:
+                self.overflow_b[idx] = TOMBSTONE
                 self.size -= 1
                 return True
 
@@ -318,8 +319,8 @@ class FunnelHashTable(Generic[K, V]):
             for i in range(bucket_size):
                 idx = (start_idx + i) % len(self.overflow_c)
                 slot = self.overflow_c[idx]
-                if slot is not None and slot[0] == key:
-                    self.overflow_c[idx] = None
+                if slot is not None and slot is not TOMBSTONE and slot[0] == key:
+                    self.overflow_c[idx] = TOMBSTONE
                     self.size -= 1
                     return True
 
@@ -356,17 +357,17 @@ class FunnelHashTable(Generic[K, V]):
         # Iterate over subarrays
         for subarray in self.subarrays:
             for slot in subarray:
-                if slot is not None:
+                if slot is not None and slot is not TOMBSTONE:
                     yield slot
 
         # Iterate over overflow area B
         for slot in self.overflow_b:
-            if slot is not None:
+            if slot is not None and slot is not TOMBSTONE:
                 yield slot
 
         # Iterate over overflow area C
         for slot in self.overflow_c:
-            if slot is not None:
+            if slot is not None and slot is not TOMBSTONE:
                 yield slot
 
     def clear(self) -> None:

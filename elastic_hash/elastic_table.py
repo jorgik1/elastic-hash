@@ -8,6 +8,7 @@ import math
 from typing import Dict, Generic, Iterator, List, Optional, Tuple, TypeVar
 
 from .hash_functions import two_dimensional_hash
+from .utils import TOMBSTONE
 
 K = TypeVar("K")  # Key type
 V = TypeVar("V")  # Value type
@@ -113,7 +114,7 @@ class ElasticHashTable(Generic[K, V]):
             return 0.0
 
         subarray = self.subarrays[subarray_idx]
-        filled = sum(1 for slot in subarray if slot is not None)
+        filled = sum(1 for slot in subarray if slot is not None and slot is not TOMBSTONE)
         return (len(subarray) - filled) / len(subarray)
 
     def _calculate_probe_limit(self, epsilon: float) -> int:
@@ -172,7 +173,7 @@ class ElasticHashTable(Generic[K, V]):
             if idx >= len(self.subarrays):
                 continue
 
-            filled = sum(1 for slot in self.subarrays[idx] if slot is not None)
+            filled = sum(1 for slot in self.subarrays[idx] if slot is not None and slot is not TOMBSTONE)
             if filled < target:
                 all_targets_met = False
                 break
@@ -214,7 +215,7 @@ class ElasticHashTable(Generic[K, V]):
                 pos = two_dimensional_hash(
                     key, primary_idx, j, len(self.subarrays[primary_idx])
                 )
-                if self.subarrays[primary_idx][pos] is None:
+                if self.subarrays[primary_idx][pos] is None or self.subarrays[primary_idx][pos] is TOMBSTONE:
                     self.subarrays[primary_idx][pos] = (key, value)
                     self.size += 1
                     self._update_batch_if_needed()
@@ -230,7 +231,7 @@ class ElasticHashTable(Generic[K, V]):
                 pos = two_dimensional_hash(
                     key, secondary_idx, j, len(self.subarrays[secondary_idx])
                 )
-                if self.subarrays[secondary_idx][pos] is None:
+                if self.subarrays[secondary_idx][pos] is None or self.subarrays[secondary_idx][pos] is TOMBSTONE:
                     self.subarrays[secondary_idx][pos] = (key, value)
                     self.size += 1
                     self._update_batch_if_needed()
@@ -242,7 +243,7 @@ class ElasticHashTable(Generic[K, V]):
         for i, subarray in enumerate(self.subarrays):
             for j in range(len(subarray)):
                 pos = two_dimensional_hash(key, i, j, len(subarray))
-                if subarray[pos] is None:
+                if subarray[pos] is None or subarray[pos] is TOMBSTONE:
                     subarray[pos] = (key, value)
                     self.size += 1
                     self._update_batch_if_needed()
@@ -273,7 +274,7 @@ class ElasticHashTable(Generic[K, V]):
                     # searching this subarray once we find an empty slot
                     break
 
-                if slot[0] == key:
+                if slot is not TOMBSTONE and slot[0] == key:
                     return slot[1]
 
                 j += 1
@@ -305,8 +306,8 @@ class ElasticHashTable(Generic[K, V]):
                     # Empty slot, key not in this subarray
                     break
 
-                if slot[0] == key:
-                    subarray[pos] = None
+                if slot is not TOMBSTONE and slot[0] == key:
+                    subarray[pos] = TOMBSTONE
                     self.size -= 1
                     return True
 
@@ -344,7 +345,7 @@ class ElasticHashTable(Generic[K, V]):
         """
         for subarray in self.subarrays:
             for slot in subarray:
-                if slot is not None:
+                if slot is not None and slot is not TOMBSTONE:
                     yield slot
 
     def clear(self) -> None:
